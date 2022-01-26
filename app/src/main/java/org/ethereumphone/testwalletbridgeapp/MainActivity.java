@@ -7,6 +7,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.util.UUID;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -15,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void onclickNode(View view) {
+    public void onclickNode(View view) throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException {
         startService();
     }
 
@@ -23,7 +33,10 @@ public class MainActivity extends AppCompatActivity {
         stopService();
     }
 
-    public void startService() {
+    public void startService() throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
+        //Create Keystore file for secure comm
+
+
         Intent serviceIntent = new Intent(this, BridgeService.class);
         serviceIntent.putExtra("inputExtra", "Bridge running in background");
         ContextCompat.startForegroundService(this, serviceIntent);

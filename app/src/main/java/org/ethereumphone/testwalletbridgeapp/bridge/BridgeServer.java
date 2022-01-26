@@ -176,29 +176,16 @@ public class BridgeServer extends WebSocketServer {
 		this.waitForStart();
 	}
 
-	public void startBridge(String[] argStrings)
+
+
+	public void startBridge(String[] argStrings, File keystoreFile, String tempPassword)
 			throws InterruptedException, IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException, UnrecoverableKeyException, KeyManagementException {
 		Arguments args = new Arguments(argStrings);
 		WebSocketServerFactory socketFactory = new DefaultWebSocketServerFactory();
-		if (args.hasArgument("-cert")) {
-			String keystoreFile = args.get("-cert");
-			assert new File(keystoreFile).exists();
-			char[] passphrase = args.get("-passphrase").toCharArray();
-			KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-			try (FileInputStream fis = new FileInputStream(new File(keystoreFile))) {
-				keystore.load(fis, passphrase);
-				KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-				keyManagerFactory.init(keystore, passphrase);
-				TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-				trustManagerFactory.init(keystore);
-				SSLContext ctx = SSLContext.getInstance("TLS");
-				ctx.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
-				socketFactory = new DefaultSSLWebSocketServerFactory(ctx);
-			}
-		}
-		int port = args.get("-port", 8887);
+		// TODO: Make it secure
 		this.start(socketFactory);
 		System.out.println(NAME + " started on port: " + this.getPort());
+		System.out.println(NAME + "is using: ");
 	}
 
 }
